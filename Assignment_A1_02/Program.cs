@@ -26,22 +26,9 @@ namespace Assignment_A1_02
                 // Get forecast for Gävle based on geolocation
                 Forecast forecastGävle = await service.GetForecastAsync(latitude, longitude);
 
-                // Present Gävle forecast details
-                Console.WriteLine($"Weather forecast for {forecastGävle.City}");
-                var groupByDateGävle = forecastGävle.Items.GroupBy(x => x.DateTime.DayOfYear);
-                foreach (var item in groupByDateGävle)
-                {
-                    DateTime forecastDates = new DateTime(DateTime.Now.Year, 1, 1).AddDays(item.Key - 1);
-                    Console.WriteLine(forecastDates.ToString("yyyy-MM-dd"));
-                    foreach (var date in item)
-                    {
-                        Console.WriteLine($" - {date.DateTime.ToString("H:mm")}: {date.Description}, temperature {date.Temperature} Celsius, wind: {date.WindSpeed} m/s");
-                    }
-                }
-
-                // Get forecast for Tokyo
-                tasks[0] = service.GetForecastAsync(latitude, longitude); // <-- Use the coordinates for Tokyo
-                tasks[1] = service.GetForecastAsync("Tokyo");
+                // Get forecast for Brisbane
+                tasks[0] = service.GetForecastAsync(latitude, longitude); // <-- Use the coordinates for Brisbane
+                tasks[1] = service.GetForecastAsync("Brisbane");
 
                 await Task.WhenAll(tasks);
 
@@ -50,10 +37,10 @@ namespace Assignment_A1_02
                     if (task.IsCompletedSuccessfully)
                     {
                         var currentForecast = await task;
-                        Console.WriteLine($"Weather forecast for {currentForecast.City}");
+                        Console.WriteLine($"\nWeather forecast for {currentForecast.City}\n");
 
-                        var groupByDateTokyo = currentForecast.Items.GroupBy(x => x.DateTime.DayOfYear);
-                        foreach (var currentDateGroup in groupByDateTokyo)
+                        var groupByDateBrisbane = currentForecast.Items.GroupBy(x => x.DateTime.DayOfYear);
+                        foreach (var currentDateGroup in groupByDateBrisbane)
                         {
                             DateTime forecastDates = DateTime.Now.AddDays(currentDateGroup.Key - 1);
                             Console.WriteLine(forecastDates.ToString("yyyy-MM-dd"));

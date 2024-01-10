@@ -38,6 +38,7 @@ namespace Assignment_A1_02.Services
 
             //Event code here to fire the event
             //Your code
+            Console.WriteLine($"Event message from weather service: New weather forecast for {City} available");
 
             //var forecast = new Forecast();
             forecast.City = wd.city.name;
@@ -66,7 +67,7 @@ namespace Assignment_A1_02.Services
 
             //Event code here to fire the event
             //Your code
-
+            Console.WriteLine($"Event message from weather service: New weather forecast for {latitude}, {longitude}) available");
 
             return forecast;
         }
