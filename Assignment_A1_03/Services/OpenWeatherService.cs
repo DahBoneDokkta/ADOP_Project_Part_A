@@ -20,8 +20,8 @@ namespace Assignment_A1_03.Services
         ConcurrentDictionary<(double, double, string), Forecast> cachedGeoForecasts = new ConcurrentDictionary<(double, double, string), Forecast>();
         ConcurrentDictionary<(string, string), Forecast> cachedCityForecasts = new ConcurrentDictionary<(string, string), Forecast>();
 
-        // Your API Key
-        readonly string apiKey = "";
+        // My API Key
+        readonly string apiKey = "073779edd27cdf4d54d4616b0ffc20b2";
 
         //Event declaration
         public event EventHandler<string> WeatherForecastAvailable;
@@ -34,7 +34,13 @@ namespace Assignment_A1_03.Services
             //part of cache code here to check if forecast in Cache
             //generate an event that shows forecast was from cache
             //Your code
+            if (cachedCityForecasts.ContainsKey((City, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))))
+            {
+                WeatherForecastAvailable?.Invoke(this, $"Cached {City}");
+                return cachedCityForecasts[(City, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))];
+            }
             
+
             //https://openweathermap.org/current
             var language = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             var uri = $"https://api.openweathermap.org/data/2.5/forecast?q={City}&units=metric&lang={language}&appid={apiKey}";
@@ -44,6 +50,9 @@ namespace Assignment_A1_03.Services
             //part of event and cache code here
             //generate an event with different message if cached data
             //Your code
+            cachedCityForecasts.AddOrUpdate(
+                (City, DateTime.Now.ToString("yyyy-MM-dd HH:mm")), forecast, (key, existingForecast) => existingForecast);
+            WeatherForecastAvailable?.Invoke(this, $"New weather for {City} available."); 
 
             return forecast;
 
@@ -53,6 +62,11 @@ namespace Assignment_A1_03.Services
             //part of cache code here to check if forecast in Cache
             //generate an event that shows forecast was from cache
             //Your code
+            if (cachedGeoForecasts.ContainsKey((latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))))
+            {
+                WeatherForecastAvailable?.Invoke(this, $"Cached {latitude} {longitude}");
+                return cachedGeoForecasts[(latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))];
+            }
 
             //https://openweathermap.org/current
             var language = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
@@ -63,6 +77,9 @@ namespace Assignment_A1_03.Services
             //part of event and cache code here
             //generate an event with different message if cached data
             //Your code
+            cachedGeoForecasts.AddOrUpdate(
+            (latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm")), forecast, (key, existingForecast) => existingForecast);
+            WeatherForecastAvailable.Invoke(this, $"\nNew weather for {latitude} {longitude} available.\n");
 
             return forecast;
         }
@@ -76,7 +93,16 @@ namespace Assignment_A1_03.Services
 
             //Convert WeatherApiData to Forecast using Linq.
             //Your code
-            var forecast = new Forecast(); //dummy to compile, replaced by your own code
+            var forecast = new Forecast();
+            forecast.City = wd.city.name;
+            forecast.Items = wd.list.Select(x => new ForecastItem()
+            {
+                DateTime = UnixTimeStampToDateTime(x.dt),
+                Temperature = x.main.temp,
+                WindSpeed = x.wind.speed,
+                Description = x.weather[0].description,
+                Icon = $"https://openweathermap.org/img/w/{x.weather.First().icon}.png"
+            }).ToList();
             return forecast;
         }
         private DateTime UnixTimeStampToDateTime(double unixTimeStamp)
