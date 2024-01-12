@@ -36,7 +36,7 @@ namespace Assignment_A1_03.Services
             //Your code
             if (cachedCityForecasts.ContainsKey((City, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))))
             {
-                WeatherForecastAvailable?.Invoke(this, $"Cached {City}");
+                WeatherForecastAvailable?.Invoke(this, $"Cached weather forecast for {City}");
                 return cachedCityForecasts[(City, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))];
             }
             
@@ -52,7 +52,9 @@ namespace Assignment_A1_03.Services
             //Your code
             cachedCityForecasts.AddOrUpdate(
                 (City, DateTime.Now.ToString("yyyy-MM-dd HH:mm")), forecast, (key, existingForecast) => existingForecast);
-            WeatherForecastAvailable?.Invoke(this, $"New weather for {City} available."); 
+            WeatherForecastAvailable?.Invoke(this, $"New weather for {City}");
+
+            Console.WriteLine($"Event message from weather service: New weather forecast for {City} available");
 
             return forecast;
 
@@ -64,7 +66,7 @@ namespace Assignment_A1_03.Services
             //Your code
             if (cachedGeoForecasts.ContainsKey((latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))))
             {
-                WeatherForecastAvailable?.Invoke(this, $"Cached {latitude} {longitude}");
+                WeatherForecastAvailable?.Invoke(this, $"Cached weather forecast for {latitude} {longitude}");
                 return cachedGeoForecasts[(latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))];
             }
 
@@ -79,7 +81,10 @@ namespace Assignment_A1_03.Services
             //Your code
             cachedGeoForecasts.AddOrUpdate(
             (latitude, longitude, DateTime.Now.ToString("yyyy-MM-dd HH:mm")), forecast, (key, existingForecast) => existingForecast);
-            WeatherForecastAvailable.Invoke(this, $"\nNew weather for {latitude} {longitude} available.\n");
+            WeatherForecastAvailable.Invoke(this, $"New weather for {latitude} {longitude} available.");
+
+            //Console.WriteLine($"Event message from weather service: {forecast.City} available");
+            //Console.WriteLine($"Event message from weather service: New weather forecast for {latitude}, {longitude}) available");
 
             return forecast;
         }

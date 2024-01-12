@@ -16,7 +16,7 @@ namespace Assignment_A1_03
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             OpenWeatherService service = new OpenWeatherService();
 
@@ -49,6 +49,7 @@ namespace Assignment_A1_03
 
                 //Wait and confirm we get an event showing cached data avaialable
                 Task.WaitAll(tasks[2], tasks[3]);
+                await Task.WhenAll(tasks[2], tasks[3]);
 
                 //var groupByDate = forecastGävle.Items.GroupBy(x => x.DateTime.DayOfYear)
 
@@ -69,6 +70,8 @@ namespace Assignment_A1_03
 
                 if (task.IsCompletedSuccessfully)
                 {
+
+                    Console.WriteLine("----------------------------------------------------");
                     var currentForecast = task.Result;
                     Console.WriteLine($"\nWeather forecast for {currentForecast.City}\n");
 
@@ -87,14 +90,15 @@ namespace Assignment_A1_03
                 {
                     Console.WriteLine($"Task faulted: {task.Exception?.InnerException?.Message}");
                 }
+
             }
         }
 
         //Event handler declaration
         //Your Code
-        private static void Service_WeatherForecastAvailable(object sender, string e)
+        private static void Service_WeatherForecastAvailable(object sender, string message)
         {
-            Console.WriteLine($"Events received {e}");
+            Console.WriteLine($"Event message from weather service: {message} available");
         }
         
     }
