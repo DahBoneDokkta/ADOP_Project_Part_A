@@ -45,7 +45,7 @@ namespace Assignment_A1_03
                 Task.WaitAll(tasks[0], tasks[1]);
 
                 tasks[2] = service.GetForecastAsync(latitude, longitude);
-                tasks[3] = service.GetForecastAsync("Brisbane");
+                tasks[3] = service.GetForecastAsync("Gävle");
 
                 //Wait and confirm we get an event showing cached data avaialable
                 Task.WaitAll(tasks[2], tasks[3]);
@@ -75,8 +75,8 @@ namespace Assignment_A1_03
                     var currentForecast = task.Result;
                     Console.WriteLine($"\nWeather forecast for {currentForecast.City}\n");
 
-                    var groupByBrisbane = currentForecast.Items.GroupBy(x => x.DateTime.DayOfYear);
-                    foreach (var currentDateGroup in groupByBrisbane)
+                    var groupByGävle = currentForecast.Items.GroupBy(x => x.DateTime.DayOfYear);
+                    foreach (var currentDateGroup in groupByGävle)
                     {
                         DateTime forecastDates = DateTime.Now.AddDays(currentDateGroup.Key - 1);
                         Console.WriteLine(forecastDates.ToString("yyyy-MM-dd"));
@@ -96,7 +96,7 @@ namespace Assignment_A1_03
 
         //Event handler declaration
         //Your Code
-        private static void Service_WeatherForecastAvailable(object sender, string message)
+        static void Service_WeatherForecastAvailable(object sender, string message)
         {
             Console.WriteLine($"Event message from weather service: {message} available");
         }

@@ -16,14 +16,14 @@ namespace Assignment_A1_03.Services
     {
         HttpClient httpClient = new HttpClient();
         
-        //Cache declaration
+        // Cache declaration
         ConcurrentDictionary<(double, double, string), Forecast> cachedGeoForecasts = new ConcurrentDictionary<(double, double, string), Forecast>();
         ConcurrentDictionary<(string, string), Forecast> cachedCityForecasts = new ConcurrentDictionary<(string, string), Forecast>();
 
         // My API Key
         readonly string apiKey = "073779edd27cdf4d54d4616b0ffc20b2";
 
-        //Event declaration
+        // Event declaration
         public event EventHandler<string> WeatherForecastAvailable;
         protected virtual void OnWeatherForecastAvailable (string message)
         {
@@ -31,9 +31,9 @@ namespace Assignment_A1_03.Services
         }
         public async Task<Forecast> GetForecastAsync(string City)
         {
-            //part of cache code here to check if forecast in Cache
-            //generate an event that shows forecast was from cache
-            //Your code
+            // part of cache code here to check if forecast is in Cache
+            // generate an event that shows forecast was from cache
+            // Your code
             if (cachedCityForecasts.ContainsKey((City, DateTime.Now.ToString("yyyy-MM-dd HH:mm"))))
             {
                 WeatherForecastAvailable?.Invoke(this, $"Cached weather forecast for {City}");
